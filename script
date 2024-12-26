@@ -8,7 +8,7 @@ local Window = OrionLib:MakeWindow({
 
 game:GetService('Players').LocalPlayer.Character.Humanoid.WalkSpeed = 150
 
-local TabRelics = Window:MakeTab({
+local TabRelics = Window:MakeTab({ 
     Name = "relecs",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
@@ -88,6 +88,35 @@ TabMisc:AddToggle({
                 character.Humanoid.WalkSpeed = walkSpeed
             end
             wait(0.1)
+        end
+    end
+})
+
+local isTeleportingToRelics = false
+
+TabRelics:AddToggle({
+    Name = "Teleport to All Shiny Relics",
+    Default = false,
+    Callback = function(Value)
+        isTeleportingToRelics = Value
+        if isTeleportingToRelics then
+            spawn(function()
+                local player = game.Players.LocalPlayer
+                local character = player.Character or player.CharacterAdded:Wait()
+                local shinyRelicsFolder = workspace:FindFirstChild("__THINGS") and workspace.__THINGS:FindFirstChild("ShinyRelics")
+
+                if not shinyRelicsFolder then
+                    return
+                end
+
+                for _, relic in ipairs(shinyRelicsFolder:GetChildren()) do
+                    if not isTeleportingToRelics then return end
+                    if relic:IsA("BasePart") and character and character:FindFirstChild("HumanoidRootPart") then
+                        character.HumanoidRootPart.CFrame = relic.CFrame + Vector3.new(0, 5, 0)
+                        wait(1)
+                    end
+                end
+            end)
         end
     end
 })
