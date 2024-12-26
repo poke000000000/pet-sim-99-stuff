@@ -1,0 +1,95 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+local Window = OrionLib:MakeWindow({
+    Name = "pokes pet sim stuff",
+    HidePremium = false,
+    SaveConfig = true,
+    ConfigFolder = "OrionTest"
+})
+
+game:GetService('Players').LocalPlayer.Character.Humanoid.WalkSpeed = 150
+
+local TabRelics = Window:MakeTab({
+    Name = "relecs",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+local TabMisc = Window:MakeTab({
+    Name = "misc",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
+
+TabMisc:AddButton({
+    Name = 'Destroy GUI 💀',
+    Callback = function()
+        OrionLib:Destroy()
+    end
+})
+
+local isClaimingPresents = false
+TabRelics:AddToggle({
+    Name = "Claim all presents in Event area",
+    Default = false,
+    Callback = function(Value)
+        isClaimingPresents = Value
+        if isClaimingPresents then
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local presentsFolder = workspace:FindFirstChild("__THINGS") and workspace.__THINGS:FindFirstChild("HolidayEventHiddenPresents")
+
+            if not presentsFolder then return end
+
+            local function teleportToPresent(present)
+                if not character or not character:FindFirstChild("HumanoidRootPart") then return end
+                character.HumanoidRootPart.CFrame = present.CFrame + Vector3.new(0, 5, 0)
+            end
+
+            for _, present in ipairs(presentsFolder:GetChildren()) do
+                if not isClaimingPresents then break end
+                if present:IsA("BasePart") then
+                    teleportToPresent(present)
+                    wait(1)
+                end
+            end
+        end
+    end
+})
+
+local walkSpeed = 150
+local loopWalkSpeed = false
+
+TabMisc:AddSlider({
+    Name = 'Walk Speed',
+    Min = 9,
+    Max = 500,
+    Default = walkSpeed,
+    Color = Color3.fromRGB(255, 255, 255),
+    Increment = 1,
+    ValueName = 'Speed',
+    Flag = 'WalkSpeedSlider',
+    Callback = function(Value)
+        walkSpeed = Value
+        if loopWalkSpeed then
+            game:GetService('Players').LocalPlayer.Character.Humanoid.WalkSpeed = walkSpeed
+        end
+    end
+})
+
+TabMisc:AddToggle({
+    Name = "Loop Walk Speed",
+    Default = false,
+    Callback = function(Value)
+        loopWalkSpeed = Value
+        while loopWalkSpeed do
+            local player = game:GetService('Players').LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            if character and character:FindFirstChild("Humanoid") then
+                character.Humanoid.WalkSpeed = walkSpeed
+            end
+            wait(0.1)
+        end
+    end
+})
+
+OrionLib:Init()
