@@ -1,12 +1,15 @@
-local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+----------------MAIN SCRIPT WINDOW-----------------------------------------
 local Window = OrionLib:MakeWindow({
     Name = "pokes pet sim stuff",
     HidePremium = false,
     SaveConfig = true,
     ConfigFolder = "OrionTest"
 })
-
+--------------------------------WALKSPEED STUFF-----------------------------
 game:GetService('Players').LocalPlayer.Character.Humanoid.WalkSpeed = 150
+----------------------------------------------------------------------------
+
+------------------TABS-------------------------------------------------------------------
 
 local TabRelics = Window:MakeTab({ 
     Name = "relecs",
@@ -20,6 +23,12 @@ local TabMisc = Window:MakeTab({
     PremiumOnly = false
 })
 
+local TabFarm = Window:MakeTab({
+    Name = "Autofarm"
+    Icon = "rbxassetid://4483345998"
+    PremiumOnly = false
+})
+---------------------ACT FUNCTIONS ETC--------------------------------------------------
 TabMisc:AddButton({
     Name = 'Destroy GUI 💀',
     Callback = function()
@@ -120,5 +129,10 @@ TabRelics:AddToggle({
         end
     end
 })
+
+
+---------------------------------LOADSTRING---------------------------------------------------------------------
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+----------------------------------------------------------------------------------------------------------------
 
 OrionLib:Init()
